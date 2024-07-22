@@ -6,8 +6,9 @@ define('VERSION','1.1');
 
 
 
-
+require 'src/WikiDomDocument.php';
 require 'src/WikiReaderWriter.php';
+require 'src/Console.php';
 #
 #
 # WIKIFIX - A SCRIPT TO REMOVE CERTAIN TAGS AND LINE BREAKS FROM A GIVEN FILE OF WIKITEXT
@@ -18,18 +19,25 @@ require 'src/WikiReaderWriter.php';
 // ./wikifix.php test.wiki result.wiki
 $infile = $argv[1];
 $outfile = $argv[1];//.'-RESULT;
+$label = $argv[2];
 $outfile = explode('.',$outfile)[0].'-FIXED.wiki';
 
-WikiReaderWriter::console("WIKIFIX VERSION " . VERSION);
 
+Console::log("WIKIFIX VERSION " . VERSION);
 
+// Read and transfrom the wikitext.
 $parser = new WikiReaderWriter();
-
-$parser->open($infile);
-
+$parser->read($infile);
 $parser->transform();
+$content = $parser->getContent();
 
-$parser->save($outfile);
+// Load the transformed content into a DOMDocument for further processing.
+$doc = WikiDomDocument::fromXML($content);
+$doc->transform($label);
+
+// Save the transformed content back to a file.
+$parser->setContent($doc->getHTML());
+$parser->write($outfile);
 
 
 __HALT_COMPILER();

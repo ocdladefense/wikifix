@@ -28,8 +28,11 @@ alias wikifix="~/wikifix"
 
 
 ## Usage
-* Run <code>./wikifix.php my-file.mw</code>.
-A downstream application (i.e., pandoc) can then do:
+<code>wikifix _infile_ [_alternate-label_]</code>
+* _infile_ - The path to a file to read wikitext from.
+* _alternate-label_ - A "string in double quotes" to be used to label all visible updated sections.
+
+### Downstream applications (i.e., pandoc) can then do:
 ```bash
 pandoc -f mediawiki -t docx fsm-chapter-1-FIXED.wiki -o fsm-chapter-1.docx
 ```
